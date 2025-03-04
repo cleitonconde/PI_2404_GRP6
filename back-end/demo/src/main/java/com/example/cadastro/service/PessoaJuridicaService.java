@@ -1,0 +1,22 @@
+package com.example.cadastro.service;
+
+import com.example.cadastro.model.PessoaJuridica;
+import com.example.cadastro.repository.PessoaJuridicaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Optional;
+
+@Service
+public class PessoaJuridicaService {
+
+    @Autowired
+    private PessoaJuridicaRepository pessoaJuridicaRepository;
+
+    public Optional<PessoaJuridica> buscarPorCnpj(String cnpj) {
+        return pessoaJuridicaRepository.findByCnpj(cnpj);
+    }
+
+    public PessoaJuridica salvar(PessoaJuridica pessoaJuridica) {
+        return pessoaJuridicaRepository.save(pessoaJuridica);
+    }
+}
