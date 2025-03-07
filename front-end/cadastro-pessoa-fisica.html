@@ -104,14 +104,14 @@
 
             const dados = {
                 nome: nome,
-                data_nascimento: dataNascimento,
-                documento: documento
+                dataNascimento: dataNascimento,
+                cpf: documento
             };
 
             console.log("dados:", dados);
 
 
-            fetch("http://localhost:8080/api/pessoas", {
+            fetch("http://localhost:8080/api/pessoas-fisicas", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

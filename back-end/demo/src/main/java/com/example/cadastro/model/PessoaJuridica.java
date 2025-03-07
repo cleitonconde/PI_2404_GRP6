@@ -2,12 +2,18 @@ package com.example.cadastro.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class PessoaJuridica extends Pessoa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false, unique = true)
     private String cnpj;
     private String inscricaoEstadual;
@@ -18,6 +24,10 @@ public abstract class PessoaJuridica extends Pessoa {
     }
 
     // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
     public String getCnpj() {
         return cnpj;
     }

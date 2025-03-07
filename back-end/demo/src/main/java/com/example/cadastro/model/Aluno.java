@@ -1,25 +1,39 @@
 package com.example.cadastro.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 @Entity
 public class Aluno extends PessoaFisica {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long matricula;
-    @ElementCollection
-    private List<String> cursos;
+    @Column(unique = true, nullable = false, length = 10)
+    private Long matricula; // Número de 10 dígitos, único
 
-    public void matricularAluno(String curso) {
-        this.cursos.add(curso);
+    @ElementCollection
+    private List<String> cursos = new ArrayList<>(); // Evita NullPointerException
+
+    // Construtor padrão
+    public Aluno() {
     }
 
+    // Construtor com parâmetros
+    public Aluno(Long matricula) {
+        setMatricula(matricula);
+    }
+
+    // Método para matricular o aluno em um curso
+    public void matricularAluno(String curso) {
+        if (curso != null && !curso.isEmpty()) {
+            this.cursos.add(curso);
+        }
+    }
+
+    // Método para consultar histórico de cursos
     public List<String> consultarHistorico() {
-        return this.cursos;
+        return new ArrayList<>(this.cursos); // Evita modificar a lista original externamente
     }
 
     // Getters e Setters
@@ -27,11 +41,19 @@ public class Aluno extends PessoaFisica {
         return matricula;
     }
 
+    public void setMatricula(Long matricula) {
+        if (matricula != null && String.valueOf(matricula).length() == 10) {
+            this.matricula = matricula;
+        } else {
+            throw new IllegalArgumentException("A matrícula deve ter exatamente 10 dígitos.");
+        }
+    }
+
     public List<String> getCursos() {
-        return cursos;
+        return new ArrayList<>(cursos); // Evita modificações externas diretas
     }
 
     public void setCursos(List<String> cursos) {
-        this.cursos = cursos;
+        this.cursos = (cursos != null) ? new ArrayList<>(cursos) : new ArrayList<>();
     }
 }

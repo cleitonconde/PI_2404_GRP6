@@ -10,13 +10,22 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class Pessoa {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String nome;
     private LocalDate dataNascimento;
 
+    public Pessoa() {
+
+    }
+
+    public Pessoa(String nome, LocalDate dataNascimento) {
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+    }
+
     // Getters e Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

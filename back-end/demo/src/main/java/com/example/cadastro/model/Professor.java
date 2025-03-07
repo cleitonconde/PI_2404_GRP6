@@ -2,15 +2,14 @@ package com.example.cadastro.model;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 @Entity
 public class Professor extends PessoaFisica {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long matricula;
+    @Column(unique = true, nullable = false, length = 10)
+    private Long matricula; // Número de 10 dígitos, único
     @ElementCollection
     private List<String> formacoes;
     @ElementCollection
@@ -23,6 +22,10 @@ public class Professor extends PessoaFisica {
     // Getters e Setters
     public Long getMatricula() {
         return matricula;
+    }
+
+    public void setMatricula(Long matricula) {
+        this.matricula = matricula;
     }
 
     public List<String> getFormacoes() {

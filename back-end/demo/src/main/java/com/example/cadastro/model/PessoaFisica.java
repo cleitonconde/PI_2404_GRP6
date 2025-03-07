@@ -1,17 +1,35 @@
 
 package com.example.cadastro.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class PessoaFisica extends Pessoa {
+public class PessoaFisica extends Pessoa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false, unique = true)
     private String cpf;
     private String rg;
+
+    public PessoaFisica() {
+        // Construtor sem argumentos necessário para desserialização
+    }
+
+    public PessoaFisica(String nome, LocalDate dataNascimento, String cpf, String rg) {
+        super(nome, dataNascimento);
+        this.cpf = cpf;
+        this.rg = rg;
+    }
 
     public boolean validarCpfExistente(String cpf) {
         // Implementação futura para verificar se CPF já existe no banco
@@ -19,6 +37,12 @@ public abstract class PessoaFisica extends Pessoa {
     }
 
     // Getters e Setters
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
     public String getCpf() {
         return cpf;
     }
