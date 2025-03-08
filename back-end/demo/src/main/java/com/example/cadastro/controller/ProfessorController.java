@@ -45,13 +45,13 @@ public class ProfessorController {
     @PutMapping("/{id}/atribuirDisciplina")
     public Professor atribuirDisciplina(@PathVariable Long id, @RequestParam String disciplina) {
         Optional<Professor> professor = professorService.buscarPorId(id);
-        professor.ifPresent(p -> professorService.atribuirDisciplina(p, disciplina));
+        // professor.ifPresent(p -> professorService.atribuirDisciplina(p, disciplina));
         return professor.orElse(null);
     }
 
     @PutMapping("/matricular")
     public ResponseEntity<Professor> matricularProfessor(@RequestBody ProfessorDTO professorDTO) {
-        System.out.println("CPF: " + professorDTO.getCpf() + " Cursos: " + professorDTO.getDisciplinas());
+        System.out.println("CPF: " + professorDTO.getCpf() + " Formações: " + professorDTO.getFormacoes());
 
         // Verificar se a Pessoa Física já existe com o CPF informado
         System.out.println("Buscando Pessoa Física com CPF: " + professorDTO.getCpf());
@@ -72,8 +72,15 @@ public class ProfessorController {
         professor.setMatricula(professorService.gerarMatriculaUnica());
 
         for (String formacoes : professorDTO.getFormacoes()) {
-            professor.matricularProfessor(formacoes);
+            System.out.println("Salvando Formação: " + formacoes);
+            professor.matricularProfessorFormacao(formacoes);
         }
+
+        /*
+         * for (String disciplina : professorDTO.getDisciplinas()) {
+         * professor.matricularProfessorDisciplina(disciplina);
+         * }
+         */
 
         // Salvar o aluno no banco de dados
         professorService.salvar(professor);

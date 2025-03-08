@@ -17,6 +17,7 @@ public class PessoaFisica extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private LocalDate dataNascimento;
     @Column(nullable = false, unique = true)
     private String cpf;
     private String rg;
@@ -26,7 +27,8 @@ public class PessoaFisica extends Pessoa {
     }
 
     public PessoaFisica(String nome, LocalDate dataNascimento, String cpf, String rg) {
-        super(nome, dataNascimento);
+        super(nome);
+        this.dataNascimento = dataNascimento;
         this.cpf = cpf;
         this.rg = rg;
     }
@@ -37,6 +39,13 @@ public class PessoaFisica extends Pessoa {
     }
 
     // Getters e Setters
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
 
     @Override
     public Long getId() {

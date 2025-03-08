@@ -14,13 +14,9 @@ public class ProfessorService {
     @Autowired
     private ProfessorRepository professorRepository;
 
-    private Long gerarMatriculaUnica() {
-        Long matricula;
-        do {
-            matricula = (long) (Math.random() * 9000000000L) + 1000000000L; // Gera um número de 10 dígitos
-        } while (professorRepository.existsByMatricula(matricula)); // Garante unicidade
-
-        return matricula;
+    public Long gerarMatriculaUnica() {
+        Long ultimaMatricula = professorRepository.findMaxMatricula().orElse(1000000000L);
+        return ultimaMatricula + 1;
     }
 
     public Optional<Professor> buscarPorId(Long id) {
@@ -31,9 +27,21 @@ public class ProfessorService {
         return professorRepository.save(professor);
     }
 
-    public void atribuirDisciplina(Professor professor, String disciplina) {
+    /*
+     * public void atribuirDisciplina(Professor professor, String disciplina) {
+     * professor.setMatricula(gerarMatriculaUnica());
+     * //professor.atribuirDisciplina(disciplina);
+     * professorRepository.save(professor);
+     * }
+     */
+
+    // public void matricularProfessor(Professor professor, String formacao, String
+    // disciplina) {
+    public void matricularProfessor(Professor professor, String formacao) {
         professor.setMatricula(gerarMatriculaUnica());
-        professor.atribuirDisciplina(disciplina);
+        professor.matricularProfessorFormacao(formacao);
+        // professor.matricularProfessorDisciplina(disciplina);
         professorRepository.save(professor);
     }
+
 }

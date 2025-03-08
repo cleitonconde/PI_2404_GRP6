@@ -1,7 +1,5 @@
 package com.example.cadastro.model;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,15 +11,13 @@ public abstract class Pessoa {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nome;
-    private LocalDate dataNascimento;
 
     public Pessoa() {
 
     }
 
-    public Pessoa(String nome, LocalDate dataNascimento) {
+    public Pessoa(String nome) {
         this.nome = nome;
-        this.dataNascimento = dataNascimento;
     }
 
     // Getters e Setters
@@ -35,13 +31,5 @@ public abstract class Pessoa {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
     }
 }

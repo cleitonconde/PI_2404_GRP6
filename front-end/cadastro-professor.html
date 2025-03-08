@@ -174,26 +174,43 @@
             document.getElementById("formacao-lista").innerHTML = "";
         }
 
-        document.getElementById("formCadastroProfessor").addEventListener("submit", function (event) {
-            event.preventDefault();
-            
-            const nome = document.getElementById("nome").value;
-            const cpf = document.getElementById("cpf").value;
-            const formacoes = [...document.querySelectorAll("#formacao-lista li")].map(li => li.textContent.replace("❌", "").trim());
+    document.getElementById("formCadastroProfessor").addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    const nome = document.getElementById("nome").value;
+    const cpf = document.getElementById("cpf").value;
+    const formacoes = [...document.querySelectorAll("#formacao-lista li")].map(li => li.textContent.replace("❌", "").trim());
 
-            if (!nome || !cpf || formacoes.length === 0) {
-                alert("Preencha todos os campos antes de cadastrar.");
-                return;
-            }
+    if (!nome || !cpf || formacoes.length === 0) {
+        alert("Preencha todos os campos antes de matricular.");
+        return;
+    }
 
-            const dados = {
-                nome: nome,
-                cpf: cpf,
-                formacoes: formacoes
-            };
+    const dados = {
+        //nome: nome,
+        cpf: cpf,
+        formacoes: formacoes
+    };
 
-            console.log("Enviando para o backend:", JSON.stringify(dados));
-            alert("Professor cadastrado com sucesso!");
+    console.log("dados:", dados);
+
+    fetch("http://localhost:8080/api/professores/matricular", {
+        method: "PUT",  // Mudança para PUT
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data) {
+            alert("Professor matriculado com sucesso!");
+            limparCampos();
+        } else {
+            alert("Erro ao matricular aluno.");
+        }
+    })
+    .catch(error => console.error("Erro:", error));
         });
     </script>
     

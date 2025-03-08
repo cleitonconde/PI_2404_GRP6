@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.cadastro.model.Fornecedor;
 
 @Repository
-public interface FornecedorRepository extends JpaRepository<Fornecedor, String> {
+public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
+    // Métodos de consulta personalizados podem ser adicionados aqui, se necessário
 }

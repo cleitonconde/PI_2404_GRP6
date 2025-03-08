@@ -11,6 +11,10 @@ public class Fornecedor extends PessoaJuridica {
     private List<String> produtosFornecidos;
     private String condicaoPagamento;
 
+    public Fornecedor(String nome, String razaoSocial, String cnpj, String inscricaoEstadual) {
+        super(nome, razaoSocial, cnpj, inscricaoEstadual);
+    }
+
     // Getters e Setters
     public List<String> getProdutosFornecidos() {
         return produtosFornecidos;

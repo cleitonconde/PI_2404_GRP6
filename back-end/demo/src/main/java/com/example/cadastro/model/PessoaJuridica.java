@@ -8,12 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
-@Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class PessoaJuridica extends Pessoa {
+@Entity
+public class PessoaJuridica extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String razaoSocial;
     @Column(nullable = false, unique = true)
     private String cnpj;
     private String inscricaoEstadual;
@@ -23,7 +24,18 @@ public abstract class PessoaJuridica extends Pessoa {
         return false;
     }
 
+    public PessoaJuridica() {
+    }
+
+    public PessoaJuridica(String nome, String razaoSocial, String cnpj, String inscricaoEstadual) {
+        super(nome);
+        this.razaoSocial = razaoSocial;
+        this.cnpj = cnpj;
+        this.inscricaoEstadual = inscricaoEstadual;
+    }
+
     // Getters e Setters
+    @Override
     public Long getId() {
         return id;
     }
@@ -42,5 +54,13 @@ public abstract class PessoaJuridica extends Pessoa {
 
     public void setInscricaoEstadual(String inscricaoEstadual) {
         this.inscricaoEstadual = inscricaoEstadual;
+    }
+
+    public String getRazaoSocial() {
+        return razaoSocial;
+    }
+
+    public void setRazaoSocial(String razaoSocial) {
+        this.razaoSocial = razaoSocial;
     }
 }

@@ -112,26 +112,26 @@
             <label for="nome">Nome:</label>
             <div class="form-group">
                 <input type="text" id="nome" name="nome" readonly>
-                <button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorNome()">🔍</button>
+                <button type="button" class="btn btn-buscar" onclick="buscarPessoaJuridicaPorNome()">🔍</button>
                 <button type="button" class="btn btn-cadastrar-pj" onclick="window.location.href='cadastro-pessoa-juridica.html'">➕</button>
             </div>
             
             <label for="razaoSocial">Razão Social:</label>
             <div class="form-group">
                 <input type="text" id="razaoSocial" name="razaoSocial" readonly>
-                <button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorRazao()">🔍</button>
+                <!--<button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorRazao()">🔍</button> -->
             </div>
 
-            <label for="documento">CNPJ:</label>
+            <label for="conj">CNPJ:</label>
             <div class="form-group">
-                <input type="text" id="documento" name="documento" readonly>
-                <button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorCpnj()">🔍</button>
+                <input type="text" id="cnpj" name="cnpj" readonly>
+                <button type="button" class="btn btn-buscar" onclick="buscarPessoaJuridicaPorCnpj()">🔍</button>
             </div>
 
             <label for="inscricaoEstadual">Inscrição Estadual:</label>
             <div class="form-group">
                 <input type="text" id="inscricaoEstadual" name="inscricaoEstadual" readonly>
-                <button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorIncricaoEstadual()">🔍</button>
+                <!-- <button type="button" class="btn btn-buscar" onclick="buscarFornecedorPorIncricaoEstadual()">🔍</button> -->
             </div>
 
             <label for="produtos">Produtos Fornecidos:</label>
@@ -144,12 +144,14 @@
 
             <label for="condicaoPagamento">Condição de Pagamento:</label>
             <div class="condicoes">
-                <input type="checkbox" id="prazo" name="condicaoPagamento" value="prazo">
-                <label for="prazo">A prazo</label>
+                <input type="checkbox" id="prazo" name="condicaoPagamento" value="prazo" style="display: inline;">
+                <label for="prazo" style="display: inline;">A prazo</label>
+                <label for="blank"></label>
                 <input type="checkbox" id="avista" name="condicaoPagamento" value="avista">
-                <label for="avista">À vista</label>
-                <input type="checkbox" id="parcelado" name="condicaoPagamento" value="parcelado">
-                <label for="parcelado">Parcelado</label>
+                <label for="avista" style="display: inline;">À vista</label>
+                <label for="blank"></label>
+                <input type="checkbox" id="parcelado" name="condicaoPagamento" value="parcelado" style="display: inline;">
+                <label for="parcelado" style="display: inline;">Parcelado</label>
             </div>
 
             <div class="btn-container">
@@ -160,15 +162,9 @@
         </form>
     </div>
 
+    <script src="js/buscarPessoaJuridicaPorNome.js" defer></script>
+    <script src="js/buscarPessoaJuridicaPorCnpj.js" defer></script>
     <script>
-        function buscarFornecedorPorNome() {
-            const nome = prompt("Digite o nome da Pessoa Física:");
-            if (nome) {
-                document.getElementById("nome").value = nome;
-                document.getElementById("cpf").value = "123.456.789-00"; // Simulando preenchimento do CPF
-            }
-        }
-
         function adicionarProduto() {
             const produtoInput = document.getElementById("produto");
             const produtoNome = produtoInput.value.trim();
@@ -193,34 +189,92 @@
             produtoLista.appendChild(listItem);
             produtoInput.value = "";
         }
-
-        function limparCampos() {
-            document.getElementById("formCadastro").reset();
-        }
-
         document.getElementById("formCadastro").addEventListener("submit", function(event) {
-            event.preventDefault();
-            
-            const nome = document.getElementById("nome").value;
-            const razaoSocial = document.getElementById("razaoSocial").value;
-            const documento = document.getElementById("documento").value;
-            const inscricaoEstadual = document.getElementById("inscricaoEstadual").value;
-            const produtos = Array.from(document.querySelectorAll('[name="produto[]"]')).map(input => input.value);
-            const condicoes = Array.from(document.querySelectorAll('[name="condicaoPagamento"]:checked')).map(input => input.value);
+    event.preventDefault();
+    
+    const nome = document.getElementById("nome").value;
+    const razaoSocial = document.getElementById("razaoSocial").value;
+    const cnpj = document.getElementById("cnpj").value;
+    const inscricaoEstadual = document.getElementById("inscricaoEstadual").value;
+    const produtos = Array.from(document.querySelectorAll('[name="produto[]"]')).map(input => input.value);
+    const condicoes = Array.from(document.querySelectorAll('[name="condicaoPagamento"]:checked')).map(input => input.value);
 
-            const dados = {
-                nome: nome,
-                razaoSocial: razaoSocial,
-                documento: documento,
-                inscricaoEstadual: inscricaoEstadual,
-                produtos: produtos,
-                condicoes: condicoes
-            };
+    const dados = {
+        nome: nome,
+        razaoSocial: razaoSocial,
+        cnpj: cnpj,
+        inscricaoEstadual: inscricaoEstadual,
+        produtosFornecidos: produtos,
+        condicaoPagamento: condicoes.join(", ")  // Fazendo um join se quiser salvar como uma string
+    };
 
-            console.log("Enviando para o backend:", JSON.stringify(dados));
-            alert("Dados cadastrados com sucesso!");
-        });
+    console.log("dados:", dados);
+
+    // Corrigir o endpoint para "/fornecedores"
+    fetch("http://localhost:8080/fornecedores", {  // Alterando para o caminho correto do endpoint
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+    })
+    .then(response => response.json())  // Alterando para .json(), já que é um POST que deve retornar JSON
+    .then(data => {
+        alert("Fornecedor cadastrado com sucesso!");
+        limparCampos();  // Limpar os campos após o sucesso
+    })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Ocorreu um erro ao cadastrar o fornecedor.");
+    });
+});
+
+// Função para limpar os campos do formulário após o cadastro
+function limparCampos() {
+    document.getElementById("formCadastro").reset();
+}
+
     </script>
+    <div id="modalPessoa" class="modal">
+        <div class="modal-content">
+            <h3>Selecione uma Pessoa</h3>
+            <ul id="listaPessoas"></ul>
+            <button onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        #listaPessoas {
+            list-style: none;
+            padding: 0;
+        }
+        #listaPessoas li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+        #listaPessoas li:hover {
+            background: #f0f0f0;
+        }
+    </style>
 
 </body>
 </html>

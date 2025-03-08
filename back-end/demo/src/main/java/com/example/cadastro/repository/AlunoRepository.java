@@ -13,5 +13,5 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     boolean existsByMatricula(Long matricula);
 
     @Query("SELECT MAX(a.matricula) FROM Aluno a")
-    Optional<Long> findMaxMatricula(); // Busca a maior matrícula existente
+    Optional<Long> findMaxMatricula();
 }
